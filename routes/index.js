@@ -5,7 +5,7 @@ var router = express.Router();
 var mongoose = require('mongoose');
 //声明数据库链接
 //mongoose.connect('mongodb://10.211.55.3/StudentTestDB');
-mongoose.connect('mongodb://120.24.208.184/newStudentDB');
+//mongoose.connect('mongodb://120.24.208.184/newStudentDB');
 
 //声明调用的模型
 //require('../models/Classes');
@@ -149,12 +149,21 @@ router.get('/login', function(req,res,next){
             if(err){
                 next(err);
             } else{
-                console.log(rows[0]);
+                //
                 if(rows[0] == undefined){
+                    console.log(rows[0]);
                     res.send('error');
                 }
                 else{
-                    res.json(rows[0]);
+                    if(rows[0].IsLogin[0] == 0){
+                        //
+                        console.log('rows[0].IsLogin[0] = '+rows[0].IsLogin[0]);
+                        res.json(rows[0]);
+                    } else{
+                        //
+                        console.log('rows[0].IsLogin[0] = '+rows[0].IsLogin[0]);
+                        res.send('haveLogin');
+                    }
                 }
             }
         });
@@ -179,9 +188,18 @@ router.get('/login', function(req,res,next){
                 //console.log('rows:'+rows[0]);
                 if(rows[0] == undefined){
                     res.send('error');
+                    console.log(rows[0]);
                 }
                 else{
-                    res.json(rows[0]);
+                    if(rows[0].IsLogin[0] == 0){
+                        //
+                        console.log('rows[0].IsLogin[0] = '+rows[0].IsLogin[0]);
+                        res.json(rows[0]);
+                    } else{
+                        //
+                        console.log('rows[0].IsLogin[0] = '+rows[0].IsLogin[0]);
+                        res.send('haveLogin');
+                    }
                 }
             }
         });
@@ -193,6 +211,52 @@ router.get('/login', function(req,res,next){
         //            res.json(doc);
         //        }
         //    });
+    }
+});
+
+router.post('/userLogin', function(req,res,next){
+    //
+    if(req.body.user == 'student'){
+        //
+        connection.query('UPDATE Student SET IsLogin = ? WHERE Phone = ?', [1, req.body.phone], function(err,rows){
+            if(err){
+                next(err);
+            } else{
+                console.log('success');
+            }
+        });
+    } else{
+        //
+        connection.query('UPDATE Clazz SET IsLogin = ? WHERE TeacherPhone = ?', [1, req.body.phone], function(err,rows){
+            if(err){
+                next(err);
+            } else{
+                console.log('success');
+            }
+        });
+    }
+});
+
+router.post('/userLogout', function(req,res,next){
+    //
+    if(req.body.user == 'student'){
+        //
+        connection.query('UPDATE Student SET IsLogin = ? WHERE Phone = ?', [0, req.body.phone], function(err,rows){
+            if(err){
+                next(err);
+            } else{
+                console.log('success');
+            }
+        });
+    } else{
+        //
+        connection.query('UPDATE Clazz SET IsLogin = ? WHERE TeacherPhone = ?', [0, req.body.phone], function(err,rows){
+            if(err){
+                next(err);
+            } else{
+                console.log('success');
+            }
+        });
     }
 });
 
