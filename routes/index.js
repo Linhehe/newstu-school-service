@@ -155,15 +155,7 @@ router.get('/login', function(req,res,next){
                     res.send('error');
                 }
                 else{
-                    if(rows[0].IsLogin[0] == 0){
-                        //
-                        console.log('rows[0].IsLogin[0] = '+rows[0].IsLogin[0]);
-                        res.json(rows[0]);
-                    } else{
-                        //
-                        console.log('rows[0].IsLogin[0] = '+rows[0].IsLogin[0]);
-                        res.send('haveLogin');
-                    }
+                    res.json(rows[0]);
                 }
             }
         });
@@ -191,15 +183,7 @@ router.get('/login', function(req,res,next){
                     console.log(rows[0]);
                 }
                 else{
-                    if(rows[0].IsLogin[0] == 0){
-                        //
-                        console.log('rows[0].IsLogin[0] = '+rows[0].IsLogin[0]);
-                        res.json(rows[0]);
-                    } else{
-                        //
-                        console.log('rows[0].IsLogin[0] = '+rows[0].IsLogin[0]);
-                        res.send('haveLogin');
-                    }
+                    res.json(rows[0]);
                 }
             }
         });
@@ -211,56 +195,6 @@ router.get('/login', function(req,res,next){
         //            res.json(doc);
         //        }
         //    });
-    }
-});
-
-router.post('/userLogin', function(req,res,next){
-    //
-    if(req.body.user == 'student'){
-        //
-        connection.query('UPDATE Student SET IsLogin = ? WHERE Phone = ?', [1, req.body.phone], function(err,rows){
-            if(err){
-                next(err);
-            } else{
-                res.send('success');
-                console.log('success');
-            }
-        });
-    } else{
-        //
-        connection.query('UPDATE Clazz SET IsLogin = ? WHERE TeacherPhone = ?', [1, req.body.phone], function(err,rows){
-            if(err){
-                next(err);
-            } else{
-                res.send('success');
-                console.log('success');
-            }
-        });
-    }
-});
-
-router.post('/userLogout', function(req,res,next){
-    //
-    if(req.body.user == 'student'){
-        //
-        connection.query('UPDATE Student SET IsLogin = ? WHERE Phone = ?', [0, req.body.phone], function(err,rows){
-            if(err){
-                next(err);
-            } else{
-                res.send('success');
-                console.log('success');
-            }
-        });
-    } else{
-        //
-        connection.query('UPDATE Clazz SET IsLogin = ? WHERE TeacherPhone = ?', [0, req.body.phone], function(err,rows){
-            if(err){
-                next(err);
-            } else{
-                res.send('success');
-                console.log('success');
-            }
-        });
     }
 });
 
