@@ -222,6 +222,7 @@ router.post('/userLogin', function(req,res,next){
             if(err){
                 next(err);
             } else{
+                res.send('success');
                 console.log('success');
             }
         });
@@ -231,6 +232,7 @@ router.post('/userLogin', function(req,res,next){
             if(err){
                 next(err);
             } else{
+                res.send('success');
                 console.log('success');
             }
         });
@@ -245,6 +247,7 @@ router.post('/userLogout', function(req,res,next){
             if(err){
                 next(err);
             } else{
+                res.send('success');
                 console.log('success');
             }
         });
@@ -254,6 +257,7 @@ router.post('/userLogout', function(req,res,next){
             if(err){
                 next(err);
             } else{
+                res.send('success');
                 console.log('success');
             }
         });
