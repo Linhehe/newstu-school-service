@@ -5,7 +5,7 @@ var router = express.Router();
 var mongoose = require('mongoose');
 //声明数据库链接
 //mongoose.connect('mongodb://10.211.55.3/StudentTestDB');
-mongoose.connect('mongodb://10.211.55.3/stu');
+mongoose.connect('mongodb://120.24.208.184/newStudentDB');
 
 //声明调用的模型
 //require('../models/Classes');
@@ -23,8 +23,9 @@ require('../models/Messages');
 //var School = mongoose.model('School');
 var Message = mongoose.model('Message');
 
-//var col = new College({ColllegesName:"123"});
-//col.save();
+var message = new Message({title:'新生开学通知', content:'热烈欢迎新生入学', time:'2015/07/19 09:30', ProfessionId:'166', Clazz:'1'});
+
+message.save();
 
 var mysql = require('mysql');
 
