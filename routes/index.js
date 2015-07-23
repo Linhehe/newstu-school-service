@@ -22,10 +22,10 @@ require('../models/Messages');
 //var College = mongoose.model('College');
 //var School = mongoose.model('School');
 var Message = mongoose.model('Message');
-
-var message = new Message({title:'新生开学通知', content:'热烈欢迎新生入学', time:'2015/07/19 09:30', ProfessionId:'166', Clazz:'1'});
-
-message.save();
+//
+//var message = new Message({title:'新生开学通知', content:'热烈欢迎新生入学', time:'2015/07/19 09:30', ProfessionId:'166', Clazz:'1'});
+//
+//message.save();
 
 var mysql = require('mysql');
 
