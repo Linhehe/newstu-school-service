@@ -5,7 +5,7 @@ var router = express.Router();
 var mongoose = require('mongoose');
 //声明数据库链接
 //mongoose.connect('mongodb://10.211.55.3/StudentTestDB');
-mongoose.connect('mongodb://120.24.208.184/newStudentDB');
+//mongoose.connect('mongodb://120.24.208.184/newStudentDB');
 
 //声明调用的模型
 //require('../models/Classes');
@@ -46,6 +46,109 @@ var connection = mysql.createConnection(
 connection.connect(function(err){
     console.log('connect: '+err);
 });
+
+var arr = [];
+var array = [];
+var arr2 = [];
+//var arr_string = arr.toString();
+var i=0;
+var j=0;
+var q=0;
+
+//console.log(arr_string);
+
+//connection.query('SELECT ProfessionId FROM Profession WHERE CollegeId = ?', [13], function(err, rows0){
+//    //
+//    while(q<rows0.length){
+//        //console.log(rows1[j].PaymentId);
+//        arr2.push(rows0[q].ProfessionId);
+//        q++;
+//    }
+//    connection.query('SELECT PaymentId FROM Student WHERE ProfessionId in (?)', [arr2], function(err,rows1){
+//        //
+//        while(j<rows1.length){
+//            //console.log(rows1[j].PaymentId);
+//            array.push(rows1[j].PaymentId);
+//            j++;
+//        }
+//        console.log(array);
+//        connection.query('SELECT COUNT(*) AS ProStu FROM Payment WHERE PaymentId in (?) and UnpaidFees = ?', [array,0], function(err,rows2){
+//            //
+//            console.log(rows2[0].ProStu);
+//        });
+//    });
+//});
+
+//***********************
+
+//connection.query('SELECT PaymentId FROM Student WHERE ProfessionId = ?', [166], function(err,rows1){
+//    //
+//    while(j<rows1.length){
+//        //console.log(rows1[j].PaymentId);
+//        array.push(rows1[j].PaymentId);
+//        j++;
+//    }
+//    //console.log(array);
+//    connection.query('SELECT COUNT(*) AS ProStu FROM Payment WHERE PaymentId in (?) and UnpaidFees != ?', [array,0], function(err,rows2){
+//        //
+//        console.log(rows2[0].ProStu);
+//    });
+//});
+
+//***********************
+
+//connection.query('SELECT ProfessionId FROM Profession WHERE CollegeId = ?', [13], function(err,rows1){
+//    //
+//    console.log(rows1);
+//    while(i<rows1.length){
+//        //
+//        //console.log(rows1[i].ProfessionId);
+//        arr.push(rows1[i].ProfessionId);
+//        i++;
+//    }
+//    console.log(arr);
+//    //
+//    connection.query('SELECT COUNT(*) AS ProStu FROM Student WHERE ProfessionId in (?) and IsRegister = ?', [arr,1], function(err,rows2){
+//        //
+//        if(err){
+//            console.log(err);
+//        } else{
+//            console.log(rows2[0].ProStu);
+//        }
+//    });
+//});
+
+//connection.query('SELECT COUNT(*) AS ProStu FROM Student WHERE ProfessionId in (?)', [arr], function(err,rows){
+//    //
+//    if(err){
+//        console.log(err);
+//    } else{
+//        console.log(rows[0]);
+//        //
+//        connection.query('SELECT ProfessionId FROM Profession WHERE CollegeId = ?', [13], function(err,rows1){
+//            //
+//            if(err){
+//                console.log(err);
+//            } else{
+//                //
+//                console.log(rows1[0]);
+//                //connection.query('SELECT CollegeId FROM Profession WHERE ProfessionId = ?', [rows1[0]], function(err,row){
+//                //    //
+//                //    if(err){
+//                //        console.log(err);
+//                //    } else{
+//                //        console.log(row[0]);
+//                //        if(row[0].CollegeId == '13'){
+//                //            //
+//                //            num = num + parseInt(rows[0].ProStu);
+//                //            console.log(num);
+//                //        }
+//                //    }
+//                //});
+//            }
+//        });
+//    }
+//});
 
 var AV = require('avoscloud-sdk').AV;
 AV.initialize("mu443zud8ylc3jcce2z1r6gmxks1g3lpflwp1awklu1xr91m", "ru4c00901eb62p0k8qea7xvxdtuqs3qfrm7zn9ztz41edjml");
@@ -771,7 +874,7 @@ router.get('/messageGet', function(req,res,next){
 
 //数据统计获取数据
 router.get('/statistics', function(req,res,next){
-    console.log(req.query.CollegeName);
+    //console.log(req.query.CollegeName);
     //
     if(req.query.CollegeName == '全校'){
         //
@@ -789,7 +892,7 @@ router.get('/statistics', function(req,res,next){
                         for(var i=0;i<row.length;i++){
                             array.push(row[i].ProfessionName);
                         }
-                        console.log(array);
+                        //console.log(array);
                         res.json(array);
                     }
                 });
@@ -849,39 +952,291 @@ router.get('/checkIsPay', function(req,res,next){
     //
     if(req.query.IsPay == 0){
         if(req.query.CollegeName == '全校'){
-            console.log('123');
-            res.send('400');
+            console.log('456');
+            res.send('4000');
         } else{
-            res.send('200');
+            if(req.query.ProfessionName == '全院'){
+                //
+                //
+                connection.query('SELECT CollegeId FROM Colleges WHERE CollegesName = ?', [req.query.CollegeName], function(err, rows3){
+                    //
+                    if(err){
+                        next(err);
+                    } else{
+                        //
+                        connection.query('SELECT ProfessionId FROM Profession WHERE CollegeId = ?', [rows3[0].CollegeId], function(err, rows0){
+                            //
+                            if(err){
+                                next(err);
+                            } else{
+                                //
+                                connection.query('SELECT ProfessionId FROM Profession WHERE ProfessionName = ?', [req.query.ProfessionName], function(err, rows4){
+                                    //
+                                    if(err){
+                                        next(err);
+                                    } else{
+                                        //
+                                        while(q<rows0.length){
+                                            //console.log(rows1[j].PaymentId);
+                                            arr2.push(rows0[q].ProfessionId);
+                                            q++;
+                                        }
+                                        console.log(arr2);
+                                        connection.query('SELECT PaymentId FROM Student WHERE ProfessionId in (?)', [arr2], function(err,rows1){
+                                            //
+                                            while(j<rows1.length){
+                                                //console.log(rows1[j].PaymentId);
+                                                array.push(rows1[j].PaymentId);
+                                                j++;
+                                            }
+                                            console.log(array);
+                                            connection.query('SELECT COUNT(*) AS ProStu FROM Payment WHERE PaymentId in (?) and UnpaidFees != ?', [array,0], function(err,rows2){
+                                                //
+                                                console.log(rows2[0].ProStu);
+                                                res.json(rows2[0].ProStu);
+                                            });
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            } else{
+                //
+                connection.query('SELECT ProfessionId FROM Profession WHERE ProfessionName = ?', [req.query.ProfessionName], function(err, rows0){
+                    //
+                    if(err){
+                        next(err);
+                    } else{
+                        connection.query('SELECT PaymentId FROM Student WHERE ProfessionId = ?', [rows0[0].ProfessionId], function(err,rows1){
+                            //
+                            while(j<rows1.length){
+                                //console.log(rows1[j].PaymentId);
+                                array.push(rows1[j].PaymentId);
+                                j++;
+                            }
+                            //console.log(array);
+                            connection.query('SELECT COUNT(*) AS ProStu FROM Payment WHERE PaymentId in (?) and UnpaidFees != ?', [array,0], function(err,rows2){
+                                //
+                                console.log(rows2[0].ProStu);
+                                res.json(rows2[0].ProStu);
+                            });
+                        });
+                    }
+                });
+            }
         }
+        array = [];
+        arr2 = [];
+        j = 0;
+        q = 0;
     }
     if(req.query.IsPay == 1){
         if(req.query.CollegeName == '全校'){
             console.log('456');
             res.send('4000');
         } else{
-            res.send('2000');
+            if(req.query.ProfessionName == '全院'){
+                //
+                //
+                connection.query('SELECT CollegeId FROM Colleges WHERE CollegesName = ?', [req.query.CollegeName], function(err, rows3){
+                    //
+                    if(err){
+                        next(err);
+                    } else{
+                        //
+                        connection.query('SELECT ProfessionId FROM Profession WHERE CollegeId = ?', [rows3[0].CollegeId], function(err, rows0){
+                            //
+                            if(err){
+                                next(err);
+                            } else{
+                                //
+                                connection.query('SELECT ProfessionId FROM Profession WHERE ProfessionName = ?', [req.query.ProfessionName], function(err, rows4){
+                                    //
+                                    if(err){
+                                        next(err);
+                                    } else{
+                                        //
+                                        while(q<rows0.length){
+                                            //console.log(rows1[j].PaymentId);
+                                            arr2.push(rows0[q].ProfessionId);
+                                            q++;
+                                        }
+                                        console.log(arr2);
+                                        connection.query('SELECT PaymentId FROM Student WHERE ProfessionId in (?)', [arr2], function(err,rows1){
+                                            //
+                                            while(j<rows1.length){
+                                                //console.log(rows1[j].PaymentId);
+                                                array.push(rows1[j].PaymentId);
+                                                j++;
+                                            }
+                                            console.log(array);
+                                            connection.query('SELECT COUNT(*) AS ProStu FROM Payment WHERE PaymentId in (?) and UnpaidFees = ?', [array,0], function(err,rows2){
+                                                //
+                                                console.log(rows2[0].ProStu);
+                                                res.json(rows2[0].ProStu);
+                                            });
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            } else{
+                //
+                connection.query('SELECT ProfessionId FROM Profession WHERE ProfessionName = ?', [req.query.ProfessionName], function(err, rows0){
+                    //
+                    if(err){
+                        next(err);
+                    } else{
+                        connection.query('SELECT PaymentId FROM Student WHERE ProfessionId = ?', [rows0[0].ProfessionId], function(err,rows1){
+                            //
+                            while(j<rows1.length){
+                                //console.log(rows1[j].PaymentId);
+                                array.push(rows1[j].PaymentId);
+                                j++;
+                            }
+                            //console.log(array);
+                            connection.query('SELECT COUNT(*) AS ProStu FROM Payment WHERE PaymentId in (?) and UnpaidFees = ?', [array,0], function(err,rows2){
+                                //
+                                console.log(rows2[0].ProStu);
+                                res.json(rows2[0].ProStu);
+                            });
+                        });
+                    }
+                });
+            }
         }
+        array = [];
+        arr2 = [];
+        j = 0;
+        q = 0;
     }
 });
 
 // 查询报道情况
 router.get('/checkIsReport', function(req,res,next){
     //
+    console.log('***'+req.query.CollegeName+'***'+req.query.ProfessionName+'***');
     if(req.query.IsPay == 0){
         if(req.query.CollegeName == '全校'){
             console.log('123');
             res.send('400');
         } else{
-            res.send('200');
+            if(req.query.ProfessionName == '全院'){
+                //
+                connection.query('SELECT CollegeId FROM Colleges WHERE CollegesName = ?', [req.query.CollegeName], function(err,rows0){
+                    //
+                    if(err){
+                        next(err);
+                    } else{
+                        connection.query('SELECT ProfessionId FROM Profession WHERE CollegeId = ?', [rows0[0].CollegeId], function(err,rows1){
+                            //
+                            console.log(rows1);
+                            while(i<rows1.length){
+                                //
+                                //console.log(rows1[i].ProfessionId);
+                                arr.push(rows1[i].ProfessionId);
+                                i++;
+                            }
+                            console.log(arr);
+                            //
+                            connection.query('SELECT COUNT(*) AS ProStu FROM Student WHERE ProfessionId in (?) and IsRegister = ?', [arr, 0], function(err,rows2){
+                                //
+                                if(err){
+                                    console.log(err);
+                                } else{
+                                    console.log(rows2[0].ProStu);
+                                    res.json(rows2[0].ProStu);
+                                }
+                            });
+                        });
+                    }
+                });
+            } else{
+                //
+                connection.query('SELECT ProfessionId FROM Profession WHERE ProfessionName = ?', [req.query.ProfessionName], function(err,rows1){
+                    //
+                    if(err){
+                        next(err);
+                    } else{
+                        //
+                        connection.query('SELECT COUNT(*) AS ProStu FROM Student WHERE ProfessionId = ? AND IsRegister = ?', [rows1[0].ProfessionId, 0], function(err,rows2){
+                            //
+                            if(err){
+                                next(err);
+                            } else{
+                                //
+                                res.json(rows2[0].ProStu);
+                                console.log('------'+rows2[0].ProStu+'------');
+                            }
+                        });
+                    }
+                });
+            }
         }
+        i=0;
+        arr=[];
     }
     if(req.query.IsPay == 1){
         if(req.query.CollegeName == '全校'){
             console.log('456');
             res.send('4000');
         } else{
-            res.send('2000');
+            if(req.query.ProfessionName == '全院'){
+                //
+                connection.query('SELECT CollegeId FROM Colleges WHERE CollegesName = ?', [req.query.CollegeName], function(err,rows0){
+                    //
+                    if(err){
+                        console.log('--------'+err+'--------');
+                    } else{
+                        connection.query('SELECT ProfessionId FROM Profession WHERE CollegeId = ?', [rows0[0].CollegeId], function(err,rows1){
+                            //
+                            console.log(rows1);
+                            while(i<rows1.length){
+                                //
+                                //console.log(rows1[i].ProfessionId);
+                                arr.push(rows1[i].ProfessionId);
+                                i++;
+                            }
+                            console.log(arr);
+                            //
+                            connection.query('SELECT COUNT(*) AS ProStu FROM Student WHERE ProfessionId in (?) and IsRegister = ?', [arr, 1], function(err,rows2){
+                                //
+                                if(err){
+                                    console.log(err);
+                                } else{
+                                    console.log(rows2[0].ProStu);
+                                    res.json(rows2[0].ProStu);
+                                }
+                            });
+                        });
+                    }
+                    i=0;
+                    arr=[];
+                });
+            } else{
+                //
+                connection.query('SELECT ProfessionId FROM Profession WHERE ProfessionName = ?', [req.query.ProfessionName], function(err,rows1){
+                    //
+                    if(err){
+                        next(err);
+                    } else{
+                        //
+                        connection.query('SELECT COUNT(*) AS ProStu FROM Student WHERE ProfessionId = ? AND IsRegister = ?', [rows1[0].ProfessionId, 1], function(err,rows2){
+                            //
+                            if(err){
+                                next(err);
+                            } else{
+                                //
+                                res.json(rows2[0].ProStu);
+                            }
+                        });
+                    }
+                });
+            }
         }
     }
 });
