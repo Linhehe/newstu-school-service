@@ -5,8 +5,8 @@ var router = express.Router();
 var mongoose = require('mongoose');
 //声明数据库链接
 //mongoose.connect('mongodb://10.211.55.3/stu');
-//mongoose.connect('mongodb://120.24.208.184/newStudentDB');
-mongoose.connect('mongodb://10.0.1.5/stu');
+mongoose.connect('mongodb://120.24.208.184/newStudentDB');
+//mongoose.connect('mongodb://10.0.1.5/stu');
 
 //声明调用的模型
 //require('../models/Classes');
