@@ -6,6 +6,8 @@
 
 var mongoose = require('mongoose');
 
+mongoose.set('debug', true);
+
 var MessageSchema = new mongoose.Schema(
     {
         title: String, // 标题

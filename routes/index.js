@@ -5,7 +5,7 @@ var router = express.Router();
 var mongoose = require('mongoose');
 //声明数据库链接
 //mongoose.connect('mongodb://10.211.55.3/stu');
-mongoose.connect('mongodb://120.24.208.184/newStudentDB1', function(err){
+mongoose.connect('mongodb://120.24.208.184/newStudentDB', function(err){
     if (err) {
         console.error('connect to %s error: ', err);
     }
@@ -47,23 +47,33 @@ var Message = mongoose.model('Message');
 //        console.log(doc);
 //    }
 //})
-    //.or([
-    //    { $and: [{ProfessionId: 166}, {Clazz: 1}]},
-    //    { $and: [{ProfessionId: 166}, {Clazz: null}]},
-    //    { $and: [{CollegeName: "计算机学院"}, {ProfessionId: null}, {Clazz: null}]}
-    //])
-    //.exec(function(err, doc){
-    //    if(err){
-    //        console.log(err);
-    //    } else{
-    //        console.log(doc);
-    //    }
-    //});
-//
-//Message.find({})
-//    .exec(function(doc){
-//        console.log(doc);
+//    .or([
+//        { $and: [{ProfessionId: 166}, {Clazz: 1}]},
+//        { $and: [{ProfessionId: 166}, {Clazz: null}]},
+//        { $and: [{CollegeName: "计算机学院"}, {ProfessionId: null}, {Clazz: null}]}
+//    ])
+//    .exec(function(err, doc){
+//        if(err){
+//            console.log(err);
+//        } else{
+//            console.log(doc);
+//        }
 //    });
+//
+//Message.find({ $or:[{ProfessionId: 166, Clazz: 1},{ProfessionId: 166, Clazz: null}, {CollegeName: "计算机学院", ProfessionId: null, Clazz: null}]}, function(err,doc){
+//    if(err){
+//        console.log(err);
+//    } else{
+//        console.log(doc);
+//    }
+//});
+//Message.find({}, function(err,doc){
+//    if(err){
+//        console.log(err);
+//    } else{
+//        console.log(doc);
+//    }
+//});
 
 var mysql = require('mysql');
 
@@ -939,20 +949,30 @@ router.get('/messageGet', function(req,res,next){
                             console.log("rows2[0].CollegesName = "+rows2[0].CollegesName);
                             console.log('rows[0].ProfessionId = '+rows[0].ProfessionId);
                             console.log('rows[0].Clazz = '+rows[0].Clazz);
-                            Message.find()
-                                .or([
-                                    { $and: [{ProfessionId: rows[0].ProfessionId}, {Clazz: rows[0].Clazz}]},
-                                    { $and: [{ProfessionId: rows[0].ProfessionId}, {Clazz: ''}]},
-                                    { $and: [{CollegeName: rows2[0].CollegesName}, {ProfessionId: ''}, {Clazz: ''}]}
-                                ])
-                                .exec(function(err, doc){
-                                    if(err){
-                                        next(err);
-                                        console.log(err);
-                                    } else{
-                                        res.json(doc);
-                                    }
-                                });
+                            //
+                            Message.find({ $or:[{ProfessionId: rows[0].ProfessionId, Clazz: rows[0].Clazz},{ProfessionId: rows[0].ProfessionId, Clazz: null}, {CollegeName: rows2[0].CollegesName, ProfessionId: null, Clazz: null}]}, function(err,doc){
+                                if(err){
+                                    next(err);
+                                    console.log(err);
+                                } else{
+                                    console.log(doc);
+                                    res.json(doc);
+                                }
+                            });
+                            //Message.find()
+                            //    .or([
+                            //        { $and: [{ProfessionId: rows[0].ProfessionId}, {Clazz: rows[0].Clazz}]},
+                            //        { $and: [{ProfessionId: rows[0].ProfessionId}, {Clazz: ''}]},
+                            //        { $and: [{CollegeName: rows2[0].CollegesName}, {ProfessionId: ''}, {Clazz: ''}]}
+                            //    ])
+                            //    .exec(function(err, doc){
+                            //        if(err){
+                            //            next(err);
+                            //            console.log(err);
+                            //        } else{
+                            //            res.json(doc);
+                            //        }
+                            //    });
                         }
                     });
                 }
