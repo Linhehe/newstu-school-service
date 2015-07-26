@@ -5,7 +5,11 @@ var router = express.Router();
 var mongoose = require('mongoose');
 //声明数据库链接
 //mongoose.connect('mongodb://10.211.55.3/stu');
-mongoose.connect('mongodb:/localhost/newStudentDB');
+mongoose.connect('mongodb://120.24.208.184/newStudentDB1', function(err){
+    if (err) {
+        console.error('connect to %s error: ', err);
+    }
+});
 //mongoose.connect('mongodb://10.0.1.5/stu');
 
 //声明调用的模型
@@ -32,19 +36,29 @@ var Message = mongoose.model('Message');
 //message2.save();
 //message3.save();
 
-//Message.find()
-//    .or([
-//        { $and: [{ProfessionId: 166}, {Clazz: 1}]},
-//        { $and: [{ProfessionId: 166}, {Clazz: null}]},
-//        { $and: [{CollegeName: "计算机学院"}, {ProfessionId: null}, {Clazz: null}]}
-//    ])
-//    .exec(function(err, doc){
-//        if(err){
-//            console.log(err);
-//        } else{
-//            console.log(doc);
-//        }
-//    });
+//Message.find({ $or: [
+//    { $and: [{ProfessionId: 166}, {Clazz: 1}]},
+//    { $and: [{ProfessionId: 166}, {Clazz: null}]},
+//    { $and: [{CollegeName: "计算机学院"}, {ProfessionId: null}, {Clazz: null}]}
+//]}, function(err, doc){
+//    if(err){
+//        console.log(err);
+//    } else{
+//        console.log(doc);
+//    }
+//})
+    //.or([
+    //    { $and: [{ProfessionId: 166}, {Clazz: 1}]},
+    //    { $and: [{ProfessionId: 166}, {Clazz: null}]},
+    //    { $and: [{CollegeName: "计算机学院"}, {ProfessionId: null}, {Clazz: null}]}
+    //])
+    //.exec(function(err, doc){
+    //    if(err){
+    //        console.log(err);
+    //    } else{
+    //        console.log(doc);
+    //    }
+    //});
 //
 //Message.find({})
 //    .exec(function(doc){
