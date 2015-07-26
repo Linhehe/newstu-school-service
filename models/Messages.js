@@ -14,6 +14,7 @@ var MessageSchema = new mongoose.Schema(
 
         ProfessionId: Number,
         Clazz: Number,
+        CollegeName: String,
 
         upvote: String, // 学生查看次数
         replies: [{type: mongoose.Schema.Types.ObjectId, ref: 'Reply'}] // 学生回复信息

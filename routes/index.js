@@ -4,8 +4,9 @@ var router = express.Router();
 //声明数据库
 var mongoose = require('mongoose');
 //声明数据库链接
-//mongoose.connect('mongodb://10.211.55.3/StudentTestDB');
-mongoose.connect('mongodb://120.24.208.184/newStudentDB');
+//mongoose.connect('mongodb://10.211.55.3/stu');
+//mongoose.connect('mongodb://120.24.208.184/newStudentDB');
+mongoose.connect('mongodb://10.0.1.5/stu');
 
 //声明调用的模型
 //require('../models/Classes');
@@ -23,9 +24,27 @@ require('../models/Messages');
 //var School = mongoose.model('School');
 var Message = mongoose.model('Message');
 //
-//var message = new Message({title:'新生开学通知', content:'热烈欢迎新生入学', time:'2015/07/19 09:30', ProfessionId:'166', Clazz:'1'});
+//var message1 = new Message({title:'新生开学通知1', content:'热烈欢迎新生入学', time:'2015/07/19 09:30', CollegeId: '1', ProfessionId:'166', Clazz:'2'});
+//var message2 = new Message({title:'新生开学通知2', content:'热烈欢迎新生入学', time:'2015/07/19 09:30', CollegeId: '1', ProfessionId:'166'});
+//var message3 = new Message({title:'新生开学通知3', content:'热烈欢迎新生入学', time:'2015/07/19 09:30', ProfessionId:'166', Clazz:'1'});
 //
-//message.save();
+//message1.save();
+//message2.save();
+//message3.save();
+
+//Message.find()
+//    .or([
+//        { $and: [{ProfessionId:'166'}, {Clazz:'1'}]},
+//        { $and: [{ProfessionId:'166'}, {Clazz: ''}]},
+//        { $and: [{CollegeName: '计算机学院'}, {ProfessionId: ''}, {Clazz: ''}]}
+//    ])
+//    .exec(function(err, doc){
+//        if(err){
+//            console.log(err);
+//        } else{
+//            console.log(doc);
+//        }
+//    });
 
 var mysql = require('mysql');
 
@@ -752,30 +771,61 @@ router.get('/update', function(req,res,next){
 // 信息发送(教师)
 router.post('/messageSend', function(req,res,next){
     //
-    var message = new Message({title: req.body.title, content: req.body.content, time: req.body.time, ProfessionId: req.body.ProfessionId, Clazz: req.body.Clazz});
-    message.save(function(err,doc){
-        if(err){
-            next(err);
-        } else{
-            console.log(doc);
-              res.send('succeed');
-        }
-    });
-    console.log(req.body.ProfessionId+'_'+req.body.Clazz);
-    client.push().setPlatform(JPush.ALL)
-        .setAudience(JPush.alias(req.body.ProfessionId+'_'+req.body.Clazz))
-        .setNotification(req.body.content, JPush.ios(req.body.content, req.body.title), JPush.android(req.body.content, req.body.title, 2))
-        //setMessage	设置message，本方法接受4个参数msg_content(string,必填), title(string), content_type(string), extras(Object)
-        .setOptions(null, 60)
-        .send(function(err, res) {
-            if (err) {
-                console.log(err.message);
-            } else {
-                console.log();
-                console.log('Sendno: ' + res.sendno);
-                console.log('Msg_id: ' + res.msg_id);
+    console.log("***"+req.body.ProfessionId+"***"+req.body.Clazz+"***"+req.body.CollegeName);
+    //
+    if(req.body.ProfessionId != '全院' && req.body.Clazz != '全专业'){
+        //
+        var message = new Message({title: req.body.title, content: req.body.content, time: req.body.time, ProfessionId: req.body.ProfessionId, Clazz: req.body.Clazz});
+        message.save(function(err,doc){
+            if(err){
+                next(err);
+            } else{
+                console.log(doc);
+                res.send('succeed');
             }
         });
+    }
+    else if(req.body.ProfessionId == '全院'){
+        //
+        console.log(req.body.title);
+        //
+        var message1 = new Message({title: req.body.title, content: req.body.content, time: req.body.time, ProfessionId: '', Clazz: '', CollegeName: req.body.CollegeName});
+        message1.save(function(err,doc){
+            if(err){
+                next(err);
+            } else{
+                console.log(doc);
+                res.send('succeed');
+            }
+        });
+    }
+    else if(req.body.Clazz == '全专业'){
+        var message = new Message({title: req.body.title, content: req.body.content, time: req.body.time, ProfessionId: req.body.ProfessionId, Clazz: ''});
+        message.save(function(err,doc){
+            if(err){
+                next(err);
+            } else{
+                console.log(doc);
+                res.send('succeed');
+            }
+        });
+    }
+    //
+    //console.log(req.body.ProfessionId+'_'+req.body.Clazz);
+    //client.push().setPlatform(JPush.ALL)
+    //    .setAudience(JPush.alias(req.body.ProfessionId+'_'+req.body.Clazz))
+    //    .setNotification(req.body.content, JPush.ios(req.body.content, req.body.title), JPush.android(req.body.content, req.body.title, 2))
+    //    //setMessage	设置message，本方法接受4个参数msg_content(string,必填), title(string), content_type(string), extras(Object)
+    //    .setOptions(null, 60)
+    //    .send(function(err, res) {
+    //        if (err) {
+    //            console.log(err.message);
+    //        } else {
+    //            console.log();
+    //            console.log('Sendno: ' + res.sendno);
+    //            console.log('Msg_id: ' + res.msg_id);
+    //        }
+    //    });
     //easy push
     //client.push().setPlatform(JPush.ALL)
     //    .setAudience(JPush.ALL)
@@ -791,15 +841,19 @@ router.post('/messageSend', function(req,res,next){
 });
 router.get('/getClassNumber', function(req,res,next){
     //
-    connection.query('SELECT Classes FROM Profession WHERE ProfessionName = ?', [req.query.ProfessionName], function(err,rows){
-        //
-        if(err){
-            next(err);
-        } else{
-            res.json(rows[0].Classes);
-            console.log(rows[0]);
-        }
-    })
+    if(req.query.ProfessionName != '全院'){
+        connection.query('SELECT Classes FROM Profession WHERE ProfessionName = ?', [req.query.ProfessionName], function(err,rows){
+            //
+            if(err){
+                next(err);
+            } else{
+                res.json(rows[0].Classes);
+                console.log(rows[0]);
+            }
+        })
+    } else{
+        res.send('null');
+    }
 });
 router.get('/getProfession', function(req,res,next){
     console.log(req.query.CollegeName);
@@ -827,15 +881,19 @@ router.get('/getProfession', function(req,res,next){
 router.get('/checkProfessionId', function(req,res,next){
     //
     console.log('req.query.ProfessionName = '+req.query.ProfessionName);
-    connection.query('SELECT ProfessionId FROM Profession WHERE ProfessionName = ?', [req.query.ProfessionName], function(err,rows){
-        //
-        if(err){
-            next(err);
-        } else{
-            console.log(rows[0]);
-            res.json(rows[0].ProfessionId);
-        }
-    });
+    if(req.query.ProfessionName != '全院'){
+        connection.query('SELECT ProfessionId FROM Profession WHERE ProfessionName = ?', [req.query.ProfessionName], function(err,rows){
+            //
+            if(err){
+                next(err);
+            } else{
+                console.log(rows[0]);
+                res.json(rows[0].ProfessionId);
+            }
+        });
+    } else{
+        res.send('全院');
+    }
 });
 
 // 信息接收(学生)
@@ -849,14 +907,42 @@ router.get('/messageGet', function(req,res,next){
         } else{
             //console.log('rows = '+rows[0].Clazz);
             //console.log(rows[0].ProfessionId + ';' + rows[0].Clazz);
-            Message.find({ProfessionId: rows[0].ProfessionId, Clazz: rows[0].Clazz}, function(err, doc){
+            connection.query('SELECT CollegeId FROM Profession WHERE ProfessionId = ?', [rows[0].ProfessionId], function(err,rows1){
+                //
                 if(err){
                     next(err);
                 } else{
-                    console.log(doc);
-                    res.json(doc);
+                    connection.query('SELECT CollegesName FROM Colleges WHERE CollegeId = ?', [rows1[0].CollegeId], function(err,rows2){
+                        //
+                        if(err){
+                            next(err);
+                        } else{
+                            console.log("rows2[0].CollegesName = "+rows2[0].CollegesName);
+                            Message.find()
+                                .or([
+                                    { $and: [{ProfessionId: rows[0].ProfessionId}, {Clazz: rows[0].Clazz}]},
+                                    { $and: [{ProfessionId: rows[0].ProfessionId}, {Clazz: ''}]},
+                                    { $and: [{CollegeName: rows2[0].CollegesName}, {ProfessionId: ''}, {Clazz: ''}]}
+                                ])
+                                .exec(function(err, doc){
+                                    if(err){
+                                        next(err);
+                                    } else{
+                                        res.json(doc);
+                                    }
+                                });
+                        }
+                    });
                 }
-            })
+            });
+            //Message.find({ProfessionId: rows[0].ProfessionId, Clazz: rows[0].Clazz}, function(err, doc){
+            //    if(err){
+            //        next(err);
+            //    } else{
+            //        console.log(doc);
+            //        res.json(doc);
+            //    }
+            //})
         }
     });
     //
