@@ -5,7 +5,7 @@ var router = express.Router();
 var mongoose = require('mongoose');
 //声明数据库链接
 //mongoose.connect('mongodb://10.211.55.3/stu');
-mongoose.connect('mongodb://120.24.208.184/newStudentDB');
+mongoose.connect('mongodb:/localhost/newStudentDB');
 //mongoose.connect('mongodb://10.0.1.5/stu');
 
 //声明调用的模型
@@ -24,19 +24,19 @@ require('../models/Messages');
 //var School = mongoose.model('School');
 var Message = mongoose.model('Message');
 //
-//var message1 = new Message({title:'新生开学通知1', content:'热烈欢迎新生入学', time:'2015/07/19 09:30', CollegeId: '1', ProfessionId:'166', Clazz:'2'});
-//var message2 = new Message({title:'新生开学通知2', content:'热烈欢迎新生入学', time:'2015/07/19 09:30', CollegeId: '1', ProfessionId:'166'});
+//var message1 = new Message({title:'新生开学通知1', content:'热烈欢迎新生入学', time:'2015/07/19 09:30', CollegeName: '计算机学院', ProfessionId:'', Clazz:''});
+//var message2 = new Message({title:'新生开学通知2', content:'热烈欢迎新生入学', time:'2015/07/19 09:30', Clazz:'', ProfessionId:'166'});
 //var message3 = new Message({title:'新生开学通知3', content:'热烈欢迎新生入学', time:'2015/07/19 09:30', ProfessionId:'166', Clazz:'1'});
-//
+////
 //message1.save();
 //message2.save();
 //message3.save();
 
 //Message.find()
 //    .or([
-//        { $and: [{ProfessionId:'166'}, {Clazz:'1'}]},
-//        { $and: [{ProfessionId:'166'}, {Clazz: ''}]},
-//        { $and: [{CollegeName: '计算机学院'}, {ProfessionId: ''}, {Clazz: ''}]}
+//        { $and: [{ProfessionId: 166}, {Clazz: 1}]},
+//        { $and: [{ProfessionId: 166}, {Clazz: null}]},
+//        { $and: [{CollegeName: "计算机学院"}, {ProfessionId: null}, {Clazz: null}]}
 //    ])
 //    .exec(function(err, doc){
 //        if(err){
@@ -44,6 +44,11 @@ var Message = mongoose.model('Message');
 //        } else{
 //            console.log(doc);
 //        }
+//    });
+//
+//Message.find({})
+//    .exec(function(doc){
+//        console.log(doc);
 //    });
 
 var mysql = require('mysql');
@@ -918,6 +923,8 @@ router.get('/messageGet', function(req,res,next){
                             next(err);
                         } else{
                             console.log("rows2[0].CollegesName = "+rows2[0].CollegesName);
+                            console.log('rows[0].ProfessionId = '+rows[0].ProfessionId);
+                            console.log('rows[0].Clazz = '+rows[0].Clazz);
                             Message.find()
                                 .or([
                                     { $and: [{ProfessionId: rows[0].ProfessionId}, {Clazz: rows[0].Clazz}]},
@@ -927,6 +934,7 @@ router.get('/messageGet', function(req,res,next){
                                 .exec(function(err, doc){
                                     if(err){
                                         next(err);
+                                        console.log(err);
                                     } else{
                                         res.json(doc);
                                     }
