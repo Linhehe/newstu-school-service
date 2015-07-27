@@ -349,6 +349,35 @@ router.get('/login', function(req,res,next){
     }
 });
 
+router.get('/getCollegeId', function(req,res,next){
+    //
+    connection.query('SELECT ProfessionId From Student WHERE Phone = ?', [req.query.phone], function(err,rows1){
+        //
+        if(err){
+            next(err);
+        } else{
+            console.log('rows1[0].ProfessionId = '+rows1[0].ProfessionId);
+            connection.query('SELECT CollegeId From Profession WHERE ProfessionId = ?', [rows1[0].ProfessionId], function(err,rows2){
+                //
+                if(err){
+                    next(err);
+                } else{
+                    //console.log('rows2[0].CollegeId = '+rows2[0]);
+                    //res.json(rows2[0]);
+                    connection.query('SELECT CollegesName From Colleges WHERE CollegeId = ?', [rows2[0].CollegeId], function(err,rows3){
+                        //
+                        if(err){
+                            next(err);
+                        } else{
+                            res.json(rows3[0]);
+                        }
+                    });
+                }
+            });
+        }
+    });
+});
+
 // 致新生的一封信
 router.get('/letter', function(req,res,next){
     //
@@ -804,6 +833,22 @@ router.post('/messageSend', function(req,res,next){
     //
     if(req.body.ProfessionId != '全院' && req.body.Clazz != '全专业'){
         //
+        console.log(req.body.ProfessionId+'_'+req.body.Clazz);
+        client.push().setPlatform(JPush.ALL)
+            .setAudience(JPush.alias(req.body.ProfessionId+'_'+req.body.Clazz))
+            .setNotification(req.body.content, JPush.ios(req.body.content, req.body.title), JPush.android(req.body.content, req.body.title, 2))
+            //setMessage	设置message，本方法接受4个参数msg_content(string,必填), title(string), content_type(string), extras(Object)
+            .setOptions(null, 60)
+            .send(function(err, res) {
+                if (err) {
+                    console.log(err.message);
+                } else {
+                    console.log();
+                    console.log('Sendno: ' + res.sendno);
+                    console.log('Msg_id: ' + res.msg_id);
+                }
+            });
+        //
         var message = new Message({title: req.body.title, content: req.body.content, time: req.body.time, ProfessionId: req.body.ProfessionId, Clazz: req.body.Clazz});
         message.save(function(err,doc){
             if(err){
@@ -815,6 +860,22 @@ router.post('/messageSend', function(req,res,next){
         });
     }
     else if(req.body.ProfessionId == '全院'){
+        //
+        console.log(req.body.CollegeName);
+        client.push().setPlatform(JPush.ALL)
+            .setAudience(JPush.tag(req.body.CollegeName))
+            .setNotification(req.body.content, JPush.ios(req.body.content, req.body.title), JPush.android(req.body.content, req.body.title, 2))
+            //setMessage	设置message，本方法接受4个参数msg_content(string,必填), title(string), content_type(string), extras(Object)
+            .setOptions(null, 60)
+            .send(function(err, res) {
+                if (err) {
+                    console.log(err.message);
+                } else {
+                    console.log();
+                    console.log('Sendno: ' + res.sendno);
+                    console.log('Msg_id: ' + res.msg_id);
+                }
+            });
         //
         console.log(req.body.title);
         //
@@ -829,6 +890,23 @@ router.post('/messageSend', function(req,res,next){
         });
     }
     else if(req.body.Clazz == '全专业'){
+        //
+        console.log(req.body.ProfessionId);
+        client.push().setPlatform(JPush.ALL)
+            .setAudience(JPush.tag(req.body.ProfessionId))
+            .setNotification(req.body.content, JPush.ios(req.body.content, req.body.title), JPush.android(req.body.content, req.body.title, 2))
+            //setMessage	设置message，本方法接受4个参数msg_content(string,必填), title(string), content_type(string), extras(Object)
+            .setOptions(null, 60)
+            .send(function(err, res) {
+                if (err) {
+                    console.log(err.message);
+                } else {
+                    console.log();
+                    console.log('Sendno: ' + res.sendno);
+                    console.log('Msg_id: ' + res.msg_id);
+                }
+            });
+        //
         var message = new Message({title: req.body.title, content: req.body.content, time: req.body.time, ProfessionId: req.body.ProfessionId, Clazz: ''});
         message.save(function(err,doc){
             if(err){
@@ -840,21 +918,7 @@ router.post('/messageSend', function(req,res,next){
         });
     }
     //
-    //console.log(req.body.ProfessionId+'_'+req.body.Clazz);
-    //client.push().setPlatform(JPush.ALL)
-    //    .setAudience(JPush.alias(req.body.ProfessionId+'_'+req.body.Clazz))
-    //    .setNotification(req.body.content, JPush.ios(req.body.content, req.body.title), JPush.android(req.body.content, req.body.title, 2))
-    //    //setMessage	设置message，本方法接受4个参数msg_content(string,必填), title(string), content_type(string), extras(Object)
-    //    .setOptions(null, 60)
-    //    .send(function(err, res) {
-    //        if (err) {
-    //            console.log(err.message);
-    //        } else {
-    //            console.log();
-    //            console.log('Sendno: ' + res.sendno);
-    //            console.log('Msg_id: ' + res.msg_id);
-    //        }
-    //    });
+
     //easy push
     //client.push().setPlatform(JPush.ALL)
     //    .setAudience(JPush.ALL)
